@@ -25,6 +25,7 @@
   export let showBorder = true //boolean
   export let totalPage = 0
   export let downloadFileName = ''
+  export let progressCallback = (downloaded, total) => {}
 
   pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker
 
@@ -189,6 +190,10 @@
         passwordError = true
         passwordMessage = error.message
       })
+
+      loadingTask.onProgress = (data) => {
+        progressCallback(data.loaded, data.total)
+      }
   }
   initialLoad()
   $: if (isInitialized) queueRenderPage(pageNum)
